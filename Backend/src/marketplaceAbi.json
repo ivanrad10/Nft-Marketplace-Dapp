@@ -1,0 +1,510 @@
+{
+    "abi": [
+        {
+            "type": "constructor",
+            "inputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "buyNft",
+            "inputs": [
+                {
+                    "name": "nftContract",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "payable"
+        },
+        {
+            "type": "function",
+            "name": "getListing",
+            "inputs": [
+                {
+                    "name": "nftContract",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct NftMarketplace.Listing",
+                    "components": [
+                        {
+                            "name": "seller",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "price",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        }
+                    ]
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "listNft",
+            "inputs": [
+                {
+                    "name": "nftContract",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "price",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "listings",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "seller",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "price",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "event",
+            "name": "NftBought",
+            "inputs": [
+                {
+                    "name": "nftContract",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256",
+                    "indexed": true,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "buyer",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "address"
+                },
+                {
+                    "name": "price",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "NftListed",
+            "inputs": [
+                {
+                    "name": "nftContract",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256",
+                    "indexed": true,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "seller",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "address"
+                },
+                {
+                    "name": "price",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "error",
+            "name": "NftMarketplace__ErrorPayingOutTheSeller",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "NftMarketplace__IncorrectBuyingPrice",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "NftMarketplace__NftListerIsNotTheOwner",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "NftMarketplace__NotApproved",
+            "inputs": []
+        }
+    ],
+    "bytecode": {
+        "object": "0x6080604052348015600f57600080fd5b506105ab8061001f6000396000f3fe60806040526004361061003e5760003560e01c806207df30146100435780634ddf4f8f146100af57806388700d1c146100c4578063c922b17c14610152575b600080fd5b34801561004f57600080fd5b5061008b61005e3660046104f0565b6000602081815292815260408082209093529081522080546001909101546001600160a01b039091169082565b604080516001600160a01b0390931683526020830191909152015b60405180910390f35b6100c26100bd3660046104f0565b610172565b005b3480156100d057600080fd5b5061012e6100df3660046104f0565b604080518082018252600080825260209182018190526001600160a01b039485168152808252828120938152928152918190208151808301909252805490931681526001909201549082015290565b6040805182516001600160a01b0316815260209283015192810192909252016100a6565b34801561015e57600080fd5b506100c261016d36600461051c565b61032a565b6001600160a01b038083166000908152602081815260408083208584528252918290208251808401909352805490931682526001909201549181018290529034146101d05760405163c0e12ddb60e01b815260040160405180910390fd5b6001600160a01b0383811660008181526020818152604080832087845290915280822080546001600160a01b03191681556001019190915583519051632142170760e11b81529216600483015233602483015260448201849052906342842e0e90606401600060405180830381600087803b15801561024e57600080fd5b505af1158015610262573d6000803e3d6000fd5b50505050600081600001516001600160a01b03163460405160006040518083038185875af1925050503d80600081146102b7576040519150601f19603f3d011682016040523d82523d6000602084013e6102bc565b606091505b50509050806102de576040516326868cdd60e21b815260040160405180910390fd5b6040805133815234602082015284916001600160a01b038716917fbd9ca37d39bd82cad4a35d9618ccc46b7055d04e211f817b2e6dae1267a02f7091015b60405180910390a350505050565b6040516331a9108f60e11b815260048101839052839033906001600160a01b03831690636352211e90602401602060405180830381865afa158015610373573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103979190610551565b6001600160a01b0316146103be576040516315fa33ff60e11b815260040160405180910390fd5b60405163020604bf60e21b81526004810184905230906001600160a01b0383169063081812fc90602401602060405180830381865afa158015610405573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104299190610551565b6001600160a01b031614610450576040516340c4b19f60e11b815260040160405180910390fd5b6040805180820182523380825260208083018681526001600160a01b0389811660008181528085528781208b82528552879020955186546001600160a01b031916921691909117855590516001909401939093558351918252810185905285927fe77c968bf19b7719db31a77b3b1392ff896ba9e80d49e57381106452c9d7cc26910161031c565b6001600160a01b03811681146104ed57600080fd5b50565b6000806040838503121561050357600080fd5b823561050e816104d8565b946020939093013593505050565b60008060006060848603121561053157600080fd5b833561053c816104d8565b95602085013595506040909401359392505050565b60006020828403121561056357600080fd5b815161056e816104d8565b939250505056fea26469706673582212203597ac7f609f65fe882f76bdd64b0636cc2fde8f9787c79f8f8b92e6dca7128664736f6c634300081a0033",
+        "sourceMap": "214:2954:34:-:0;;;1119:16;;;;;;;;;;214:2954;;;;;;",
+        "linkReferences": {}
+    },
+    "deployedBytecode": {
+        "object": "0x60806040526004361061003e5760003560e01c806207df30146100435780634ddf4f8f146100af57806388700d1c146100c4578063c922b17c14610152575b600080fd5b34801561004f57600080fd5b5061008b61005e3660046104f0565b6000602081815292815260408082209093529081522080546001909101546001600160a01b039091169082565b604080516001600160a01b0390931683526020830191909152015b60405180910390f35b6100c26100bd3660046104f0565b610172565b005b3480156100d057600080fd5b5061012e6100df3660046104f0565b604080518082018252600080825260209182018190526001600160a01b039485168152808252828120938152928152918190208151808301909252805490931681526001909201549082015290565b6040805182516001600160a01b0316815260209283015192810192909252016100a6565b34801561015e57600080fd5b506100c261016d36600461051c565b61032a565b6001600160a01b038083166000908152602081815260408083208584528252918290208251808401909352805490931682526001909201549181018290529034146101d05760405163c0e12ddb60e01b815260040160405180910390fd5b6001600160a01b0383811660008181526020818152604080832087845290915280822080546001600160a01b03191681556001019190915583519051632142170760e11b81529216600483015233602483015260448201849052906342842e0e90606401600060405180830381600087803b15801561024e57600080fd5b505af1158015610262573d6000803e3d6000fd5b50505050600081600001516001600160a01b03163460405160006040518083038185875af1925050503d80600081146102b7576040519150601f19603f3d011682016040523d82523d6000602084013e6102bc565b606091505b50509050806102de576040516326868cdd60e21b815260040160405180910390fd5b6040805133815234602082015284916001600160a01b038716917fbd9ca37d39bd82cad4a35d9618ccc46b7055d04e211f817b2e6dae1267a02f7091015b60405180910390a350505050565b6040516331a9108f60e11b815260048101839052839033906001600160a01b03831690636352211e90602401602060405180830381865afa158015610373573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103979190610551565b6001600160a01b0316146103be576040516315fa33ff60e11b815260040160405180910390fd5b60405163020604bf60e21b81526004810184905230906001600160a01b0383169063081812fc90602401602060405180830381865afa158015610405573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104299190610551565b6001600160a01b031614610450576040516340c4b19f60e11b815260040160405180910390fd5b6040805180820182523380825260208083018681526001600160a01b0389811660008181528085528781208b82528552879020955186546001600160a01b031916921691909117855590516001909401939093558351918252810185905285927fe77c968bf19b7719db31a77b3b1392ff896ba9e80d49e57381106452c9d7cc26910161031c565b6001600160a01b03811681146104ed57600080fd5b50565b6000806040838503121561050357600080fd5b823561050e816104d8565b946020939093013593505050565b60008060006060848603121561053157600080fd5b833561053c816104d8565b95602085013595506040909401359392505050565b60006020828403121561056357600080fd5b815161056e816104d8565b939250505056fea26469706673582212203597ac7f609f65fe882f76bdd64b0636cc2fde8f9787c79f8f8b92e6dca7128664736f6c634300081a0033",
+        "sourceMap": "214:2954:34:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;393:63;;;;;;;;;;-1:-1:-1;393:63:34;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;393:63:34;;;;;;;;;;-1:-1:-1;;;;;714:32:36;;;696:51;;778:2;763:18;;756:34;;;;669:18;393:63:34;;;;;;;;2072:677;;;;;;:::i;:::-;;:::i;:::-;;2995:171;;;;;;;;;;-1:-1:-1;2995:171:34;;;;;:::i;:::-;-1:-1:-1;;;;;;;;;;;;;;;;;;;;;;;;3129:21:34;;;;;;;;;;;:30;;;;;;;;;;3122:37;;;;;;;;;;;;;;;;;;;;;;;;;2995:171;;;;;1021:13:36;;-1:-1:-1;;;;;1017:39:36;999:58;;1113:4;1101:17;;;1095:24;1073:20;;;1066:54;;;;972:18;2995:171:34;801:325:36;1366:532:34;;;;;;;;;;-1:-1:-1;1366:532:34;;;;;:::i;:::-;;:::i;2072:677::-;-1:-1:-1;;;;;2176:21:34;;;2151:22;2176:21;;;;;;;;;;;:30;;;;;;;;;2151:55;;;;;;;;;;;;;;;;;;;;;;;;;;;2238:9;2221:26;2217:102;;2270:38;;-1:-1:-1;;;2270:38:34;;;;;;;;;;;2217:102;-1:-1:-1;;;;;2336:21:34;;;:8;:21;;;;;;;;;;;:30;;;;;;;;;2329:37;;-1:-1:-1;;;;;;2329:37:34;;;-1:-1:-1;2329:37:34;;;;;2427:14;;2376:120;;-1:-1:-1;;;2376:120:34;;1843:32:36;;2376:120:34;;;1825:51:36;2455:10:34;1892:18:36;;;1885:60;1961:18;;;1954:34;;;2336:21:34;2376:37;;1798:18:36;;2376:120:34;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2508:12;2534:7;:14;;;-1:-1:-1;;;;;2526:28:34;2562:9;2526:50;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2507:69;;;2591:7;2586:87;;2621:41;;-1:-1:-1;;;2621:41:34;;;;;;;;;;;2586:87;2688:54;;;2720:10;696:51:36;;2732:9:34;778:2:36;763:18;;756:34;2711:7:34;;-1:-1:-1;;;;;2688:54:34;;;;;669:18:36;2688:54:34;;;;;;;;2141:608;;2072:677;;:::o;1366:532::-;1531:20;;-1:-1:-1;;;1531:20:34;;;;;2355:25:36;;;1505:11:34;;1555:10;;-1:-1:-1;;;;;1531:11:34;;;;;2328:18:36;;1531:20:34;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;1531:34:34;;1527:112;;1588:40;;-1:-1:-1;;;1588:40:34;;;;;;;;;;;1527:112;1653:24;;-1:-1:-1;;;1653:24:34;;;;;2355:25:36;;;1689:4:34;;-1:-1:-1;;;;;1653:15:34;;;;;2328:18:36;;1653:24:34;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;1653:41:34;;1649:108;;1717:29;;-1:-1:-1;;;1717:29:34;;;;;;;;;;;1649:108;1800:26;;;;;;;;1808:10;1800:26;;;;;;;;;;-1:-1:-1;;;;;1767:21:34;;;-1:-1:-1;1767:21:34;;;;;;;;;:30;;;;;;;;:59;;;;-1:-1:-1;;;;;;1767:59:34;;;;;;;;;;;-1:-1:-1;1767:59:34;;;;;;;1841:50;;696:51:36;;;763:18;;756:34;;;1767:30:34;;1841:50;;669:18:36;1841:50:34;522:274:36;14:131;-1:-1:-1;;;;;89:31:36;;79:42;;69:70;;135:1;132;125:12;69:70;14:131;:::o;150:367::-;218:6;226;279:2;267:9;258:7;254:23;250:32;247:52;;;295:1;292;285:12;247:52;334:9;321:23;353:31;378:5;353:31;:::i;:::-;403:5;481:2;466:18;;;;453:32;;-1:-1:-1;;;150:367:36:o;1131:487::-;1208:6;1216;1224;1277:2;1265:9;1256:7;1252:23;1248:32;1245:52;;;1293:1;1290;1283:12;1245:52;1332:9;1319:23;1351:31;1376:5;1351:31;:::i;:::-;1401:5;1479:2;1464:18;;1451:32;;-1:-1:-1;1582:2:36;1567:18;;;1554:32;;1131:487;-1:-1:-1;;;1131:487:36:o;2391:251::-;2461:6;2514:2;2502:9;2493:7;2489:23;2485:32;2482:52;;;2530:1;2527;2520:12;2482:52;2562:9;2556:16;2581:31;2606:5;2581:31;:::i;:::-;2631:5;2391:251;-1:-1:-1;;;2391:251:36:o",
+        "linkReferences": {}
+    },
+    "methodIdentifiers": {
+        "buyNft(address,uint256)": "4ddf4f8f",
+        "getListing(address,uint256)": "88700d1c",
+        "listNft(address,uint256,uint256)": "c922b17c",
+        "listings(address,uint256)": "0007df30"
+    },
+    "rawMetadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"NftMarketplace__ErrorPayingOutTheSeller\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NftMarketplace__IncorrectBuyingPrice\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NftMarketplace__NftListerIsNotTheOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NftMarketplace__NotApproved\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"NftBought\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"NftListed\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"buyNft\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getListing\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"internalType\":\"struct NftMarketplace.Listing\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"listNft\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listings\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"errors\":{\"NftMarketplace__NftListerIsNotTheOwner()\":[{\"details\":\"Error codes\"}]},\"events\":{\"NftBought(address,uint256,address,uint256)\":{\"details\":\"Event emitted when an NFT is successfully bought\"},\"NftListed(address,uint256,address,uint256)\":{\"details\":\"Event emitted when an NFT is listed for sale\"}},\"kind\":\"dev\",\"methods\":{\"buyNft(address,uint256)\":{\"params\":{\"nftContract\":\"Address of the ERC721 NFT contract\",\"tokenId\":\"ID of the token to be bought\"}},\"constructor\":{\"details\":\"Constructor\"},\"getListing(address,uint256)\":{\"params\":{\"nftContract\":\"Address of the ERC721 NFT contract\",\"tokenId\":\"ID of the token\"},\"returns\":{\"_0\":\"Listing information including seller address and price\"}},\"listNft(address,uint256,uint256)\":{\"params\":{\"nftContract\":\"Address of the ERC721 NFT contract\",\"price\":\"Price at which the NFT is listed\",\"tokenId\":\"ID of the token to be listed\"}}},\"stateVariables\":{\"listings\":{\"details\":\"Mapping to store listings for each NFT contract and token ID\"}},\"title\":\"NftMarketplace\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"buyNft(address,uint256)\":{\"notice\":\"Buys an NFT listed on the marketplace\"},\"getListing(address,uint256)\":{\"notice\":\"Retrieves the current listing information of an NFT\"},\"listNft(address,uint256,uint256)\":{\"notice\":\"Lists an NFT for sale on the marketplace\"}},\"notice\":\"A marketplace contract for listing and buying ERC721 NFTs\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/NftMarketplace.sol\":\"NftMarketplace\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\",\":ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/\",\":erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol\":{\"keccak256\":\"0x5ef46daa3b58ef2702279d514780316efaa952915ee1aa3396f041ee2982b0b4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2f8f2a76e23b02fc69e8cd24c3cb47da6c7af3a2d6c3a382f8ac25c6e094ade7\",\"dweb:/ipfs/QmPV4ZS4tPVv4mTCf9ejyZ1ai57EEibDRj7mN2ARDCLV5n\"]},\"lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x4296879f55019b23e135000eb36896057e7101fb7fb859c5ef690cf14643757b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://87b3541437c8c443ccd36795e56a338ed12855eec17f8da624511b8d1a7e14df\",\"dweb:/ipfs/QmeJQCtZrQjtJLr6u7ZHWeH3pBnjtLWzvRrKViAi7UZqxL\"]},\"src/NftMarketplace.sol\":{\"keccak256\":\"0x37084daf8750e214039bc3f3a9e349d3039053a3fa6d4be8dd404f0be9b4eb79\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://866b5c8a669ff7aa117d39aa92c5ab2088a207baa86cd77e27f9375f0fc6fd1c\",\"dweb:/ipfs/QmRYkoCrY7Ls1GMiLpMsNdo6tYcrGN1k3aKz6rED9Lro7A\"]}},\"version\":1}",
+    "metadata": {
+        "compiler": {
+            "version": "0.8.26+commit.8a97fa7a"
+        },
+        "language": "Solidity",
+        "output": {
+            "abi": [
+                {
+                    "inputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "inputs": [],
+                    "type": "error",
+                    "name": "NftMarketplace__ErrorPayingOutTheSeller"
+                },
+                {
+                    "inputs": [],
+                    "type": "error",
+                    "name": "NftMarketplace__IncorrectBuyingPrice"
+                },
+                {
+                    "inputs": [],
+                    "type": "error",
+                    "name": "NftMarketplace__NftListerIsNotTheOwner"
+                },
+                {
+                    "inputs": [],
+                    "type": "error",
+                    "name": "NftMarketplace__NotApproved"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "nftContract",
+                            "type": "address",
+                            "indexed": true
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256",
+                            "indexed": true
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "buyer",
+                            "type": "address",
+                            "indexed": false
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "price",
+                            "type": "uint256",
+                            "indexed": false
+                        }
+                    ],
+                    "type": "event",
+                    "name": "NftBought",
+                    "anonymous": false
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "nftContract",
+                            "type": "address",
+                            "indexed": true
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256",
+                            "indexed": true
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "seller",
+                            "type": "address",
+                            "indexed": false
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "price",
+                            "type": "uint256",
+                            "indexed": false
+                        }
+                    ],
+                    "type": "event",
+                    "name": "NftListed",
+                    "anonymous": false
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "nftContract",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "payable",
+                    "type": "function",
+                    "name": "buyNft"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "nftContract",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function",
+                    "name": "getListing",
+                    "outputs": [
+                        {
+                            "internalType": "struct NftMarketplace.Listing",
+                            "name": "",
+                            "type": "tuple",
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "seller",
+                                    "type": "address"
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "price",
+                                    "type": "uint256"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "nftContract",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "price",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "nonpayable",
+                    "type": "function",
+                    "name": "listNft"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function",
+                    "name": "listings",
+                    "outputs": [
+                        {
+                            "internalType": "address",
+                            "name": "seller",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "price",
+                            "type": "uint256"
+                        }
+                    ]
+                }
+            ],
+            "devdoc": {
+                "kind": "dev",
+                "methods": {
+                    "buyNft(address,uint256)": {
+                        "params": {
+                            "nftContract": "Address of the ERC721 NFT contract",
+                            "tokenId": "ID of the token to be bought"
+                        }
+                    },
+                    "constructor": {
+                        "details": "Constructor"
+                    },
+                    "getListing(address,uint256)": {
+                        "params": {
+                            "nftContract": "Address of the ERC721 NFT contract",
+                            "tokenId": "ID of the token"
+                        },
+                        "returns": {
+                            "_0": "Listing information including seller address and price"
+                        }
+                    },
+                    "listNft(address,uint256,uint256)": {
+                        "params": {
+                            "nftContract": "Address of the ERC721 NFT contract",
+                            "price": "Price at which the NFT is listed",
+                            "tokenId": "ID of the token to be listed"
+                        }
+                    }
+                },
+                "version": 1
+            },
+            "userdoc": {
+                "kind": "user",
+                "methods": {
+                    "buyNft(address,uint256)": {
+                        "notice": "Buys an NFT listed on the marketplace"
+                    },
+                    "getListing(address,uint256)": {
+                        "notice": "Retrieves the current listing information of an NFT"
+                    },
+                    "listNft(address,uint256,uint256)": {
+                        "notice": "Lists an NFT for sale on the marketplace"
+                    }
+                },
+                "version": 1
+            }
+        },
+        "settings": {
+            "remappings": [
+                "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+                "ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/",
+                "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+                "forge-std/=lib/forge-std/src/",
+                "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+            ],
+            "optimizer": {
+                "enabled": true,
+                "runs": 200
+            },
+            "metadata": {
+                "bytecodeHash": "ipfs"
+            },
+            "compilationTarget": {
+                "src/NftMarketplace.sol": "NftMarketplace"
+            },
+            "evmVersion": "paris",
+            "libraries": {}
+        },
+        "sources": {
+            "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol": {
+                "keccak256": "0x5ef46daa3b58ef2702279d514780316efaa952915ee1aa3396f041ee2982b0b4",
+                "urls": [
+                    "bzz-raw://2f8f2a76e23b02fc69e8cd24c3cb47da6c7af3a2d6c3a382f8ac25c6e094ade7",
+                    "dweb:/ipfs/QmPV4ZS4tPVv4mTCf9ejyZ1ai57EEibDRj7mN2ARDCLV5n"
+                ],
+                "license": "MIT"
+            },
+            "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+                "keccak256": "0x4296879f55019b23e135000eb36896057e7101fb7fb859c5ef690cf14643757b",
+                "urls": [
+                    "bzz-raw://87b3541437c8c443ccd36795e56a338ed12855eec17f8da624511b8d1a7e14df",
+                    "dweb:/ipfs/QmeJQCtZrQjtJLr6u7ZHWeH3pBnjtLWzvRrKViAi7UZqxL"
+                ],
+                "license": "MIT"
+            },
+            "src/NftMarketplace.sol": {
+                "keccak256": "0x37084daf8750e214039bc3f3a9e349d3039053a3fa6d4be8dd404f0be9b4eb79",
+                "urls": [
+                    "bzz-raw://866b5c8a669ff7aa117d39aa92c5ab2088a207baa86cd77e27f9375f0fc6fd1c",
+                    "dweb:/ipfs/QmRYkoCrY7Ls1GMiLpMsNdo6tYcrGN1k3aKz6rED9Lro7A"
+                ],
+                "license": "MIT"
+            }
+        },
+        "version": 1
+    },
+    "id": 34
+}
